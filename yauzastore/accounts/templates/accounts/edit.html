@@ -1,0 +1,48 @@
+{% extends 'shop/layout.html' %}
+{% load static %}
+{% load cart_filters %}
+{% block content %}
+<div class="container mt-5">
+    <form method="POST">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6 mb-3 text-start">
+                <label for="username" class="form-label">Имя пользователя:</label>
+                {{ user_form.username|add_class:"form-control" }}
+            </div>
+            <div class="col-md-6 mb-3 text-start">
+                <label for="first_name" class="form-label">Имя:</label>
+                {{ user_form.first_name|add_class:"form-control" }}
+            </div>
+            <div class="col-md-6 mb-3 text-start">
+                <label for="last_name" class="form-label">Фамилия:</label>
+                {{ user_form.last_name|add_class:"form-control" }}
+            </div>
+            <div class="col-md-6 mb-3 text-start">
+                <label for="email" class="form-label">Email:</label>
+                {{ user_form.email|add_class:"form-control" }}
+            </div>
+            <div class="col-md-6 mb-3 text-start">
+                <label for="phone_number" class="form-label">Номер телефона:</label>
+                {{ profile_form.phone_number|add_class:"form-control" }}
+            </div>
+            <div class="col-md-6 mb-3 text-start">
+                <label for="social_link" class="form-label">Ссылка на соц. сеть:</label>
+                {{ profile_form.social_link|add_class:"form-control" }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn bg-danger bg-opacity-25 mb-6">Обновить профиль</button>
+            </div>
+        </div>
+    </form>
+    
+    <form method="POST" action="{% url 'change_password' %}">
+        {% csrf_token %}
+        {{ password_form.as_p }}
+        <button type="submit" class="btn bg-danger bg-opacity-25 mt-3">Изменить пароль</button>
+    </form>
+    <button type="button" class="btn bg-danger bg-opacity-25 mt-3" onclick="window.history.back()">Выйти без изменений</button>
+</div>
+{% endblock %}

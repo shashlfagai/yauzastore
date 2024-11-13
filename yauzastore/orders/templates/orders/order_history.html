@@ -1,0 +1,26 @@
+{% extends 'shop/layout.html' %}
+{% load static %}
+{% load cart_filters %}
+
+{% block content %}
+{% if orders %}
+    <div class="col-md-8 offset-md-1">
+        <h2 class="m-3">Ваши заказы:</h2>
+        <div class="card my-5 p-3 p-sm-4 m-3">
+            <div class="row">
+                {% for order in orders %}
+                    <div class="card-body">
+                        <p><strong>Заказ:</strong> {{ order.id }}</p>   
+                        <p><strong>Статус:</strong> {{ order.get_status_display }}</p>
+                        <p><strong>Дата создания:</strong> {{ order.created_at }}</p>
+                        <a href="{% url 'order_detail' order.id %}" class="btn bg-danger bg-opacity-50">Детали заказа</a>
+                        <a href="{% url 'account' %}" class="btn bg-danger bg-opacity-25">Назад</a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% else %}
+    <h2>Пока что вы не совершили ни одного заказа.</h2>
+{% endif %}
+{% endblock %}

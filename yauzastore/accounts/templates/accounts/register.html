@@ -1,0 +1,59 @@
+{% extends 'shop/layout.html' %}
+{% load static %}
+{% load cart_filters %}
+{% block content %}
+<div class="container overflow-hidden text-center">
+    <h2>Регистрация</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6 mb-3 text-start">
+                <label for="username" class="form-label">Имя пользователя:</label>
+                {{ form.username|add_class:"form-control" }}
+            </div>
+            <div class="col-md-6 mb-3 text-start">
+                <label for="email" class="form-label">Email:</label>
+                {{ form.email|add_class:"form-control" }}
+            </div>
+            <div class="col-md-6 mb-3 text-start">
+                <label for="first_name" class="form-label">Имя:</label>
+                {{ form.first_name|add_class:"form-control" }}
+            </div>
+            <div class="col-md-6 mb-3 text-start">
+                <label for="last_name" class="form-label">Фамилия:</label>
+                {{ form.last_name|add_class:"form-control" }}
+            </div>
+            <div class="col-md-6 mb-3 text-start">
+                <label for="phone_number" class="form-label">Номер телефона:</label>
+                {{ form.phone_number|add_class:"form-control" }}
+            </div>
+            <div class="col-md-6 mb-3 text-start">
+                <label for="social_link" class="form-label">Ссылка на соц. сеть:</label>
+                {{ form.social_link|add_class:"form-control" }}
+            </div>
+            <div class="col-md-6 mb-3 text-start">
+                <label for="password1" class="form-label">Пароль:</label>
+                {{ form.password1|add_class:"form-control" }}
+            </div>
+            <div class="col-md-6 mb-3 text-start">
+                <label for="password2" class="form-label">Подтвердите пароль:</label>
+                {{ form.password2|add_class:"form-control" }}
+            </div>
+            <div class="col-md-12 mb-3 text-start">
+                <div class="form-check">
+                    {{ form.agree_to_privacy_policy|add_class:"form-check-input" }}
+                    <label for="agree_to_privacy_policy" class="form-check-label">
+                        Я соглашаюсь с <a href="{% url 'privacy_policy' %}" target="_blank">политикой конфиденциальности</a>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn bg-danger bg-opacity-25 mb-6">Зарегистрироваться</button>
+            </div>
+        </div>
+    </form>
+    <p>Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a></p>
+</div>
+{% endblock %}

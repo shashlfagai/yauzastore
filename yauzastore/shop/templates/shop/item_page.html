@@ -1,0 +1,52 @@
+{% extends 'shop/layout.html' %}
+{% load static %}
+{% load cart_filters %}
+
+{% block content %}
+<div class="container-fluid ms-3">
+    <button type="button" class="btn bg-danger bg-opacity-25" onclick="window.history.back()">Назад</button>
+</div>
+<div class="container text-center">
+    <div class="row item-info">
+        <div class="col col-md-5 offset-3 justify-content-md-left item-info-image">
+            <img src="{{ item.images.first.image.url }}" alt="item" class="img-fluid">
+        </div>
+        <div class="col col-md-3 bordered d-flex flex-column justify-content-between px-4 item-description">
+            <div>
+                <h3 class="item-page-name"><strong>{{ item.name }}</strong></h3>
+                <p>{{ item.description }}</p>
+            </div>
+            <div class="my-auto">
+                {% if item.has_discount %}
+                    <p><span class="price-number">{{ item.get_discounted_price }}</span></p>
+                    <p><span style="text-decoration: line-through;">{{ item.price }}</span></p>
+                {% else %}
+                    <p><span class="price-number">{{ item.price }}</span></p>
+                {% endif %}
+            </div>
+            <div class="container text-center">
+                {% if total_quantity > 0 %}
+                    <form method="post" action="{% url 'add_to_order' item.id %}">
+                        <div class="container-fluid" style="margin-bottom: 20px;">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn bg-danger bg-opacity-25 btn-sm">Добавить в корзину</button>
+                            </div>
+                        </div>
+                    </form>
+                {% else %}
+                    <p class="text-danger">Этот товар больше не доступен для покупки.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col col-8 offset-3 flex-column justify-content-between px-4 item-description item-info-image item-additional-images">
+        {% for image in item.images.all %}
+            {% if image != item.images.first %}
+                <img src="{{ image.image.url }}" alt="item" class="img-fluid">
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

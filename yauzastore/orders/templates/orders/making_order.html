@@ -1,0 +1,87 @@
+{% extends 'shop/layout.html' %}
+{% load static %}
+{% load cart_filters %}
+
+{% block content %}
+    <div class="col-md-8 offset-md-1">
+        <h2 class="m-3">Оформление заказа:</h2>
+        <div class="card p-3 p-sm-4 m-5">
+            <div class="row">
+                {% for item in items %}
+                <div class="row align-items-center">
+                    <div class="col-4">
+                        <img src="{{ item.product.images.first.image.url }}" alt="{{ item.product.name }}" class="img-fluid" style="width: 180px">
+                    </div>
+        
+                    <div class="col-8">
+                        <div class="card-body">
+                            <p><strong>{{ item.product.name }}</strong><br>Размер: {{ item.size }}<br>Количество: {{ item.quantity }}<br>Цена: {{ item.price }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% if not forloop.last %}
+                    <hr class="my-4">
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="mx-3 mb-5">
+            {% if total_cost != total_discount_cost %}
+                <p class="card-text"><span style="text-decoration: line-through;">Цена: {{ total_cost }}</span></p>
+                <p class="card-text"><strong>Итоговая стоимость:</strong> {{ total_discount_cost }}</p>
+            {% else %}
+                <p class="card-text"><strong>Итоговая стоимость:</strong> {{ total_discount_cost }}</p>
+            {% endif %}
+        </div>
+        <form method="post" action="{% url 'submit_order' %}">
+            {% csrf_token %}
+            
+            <!-- Выбор способа доставки -->
+            <h3 class="m-3">Выберете способ доставки:</h3>
+            <div class="card my-5 p-3 p-sm-4 m-5">
+                <div class="row">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="shipping_method" value="pickup" id="pickup" checked>
+                        <label class="form-check-label" for="pickup">
+                            Самовывоз из шоурума
+                        </label>
+                    </div>
+                    <hr class="my-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="shipping_method" value="cdek" id="cdek" disabled>
+                        <label class="form-check-label" for="cdek">
+                            Доставка в пункт выдачи CDEK (пока не доступен)
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <!-- Выбор способа оплаты -->
+            <h3 class="m-3">Выберете способ оплаты:</h3>
+            <div class="card mx-5 mb-3 p-3 p-sm-4">
+                <div class="row">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="payment_method" value="cash" id="cash" checked>
+                        <label class="form-check-label" for="cash">
+                            Оплата наличными или переводом при получении.
+                        </label>
+                    </div>
+                    <hr class="my-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="payment_method" value="online" id="online" disabled>
+                        <label class="form-check-label" for="online">
+                            Оплата онлайн (пока не доступна)
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <!-- Кнопка отправки заказа -->
+            <div class="row">
+                <div class="d-grid">
+                    <button type="submit" class="btn bg-danger bg-opacity-25 mx-5 mb-1">Отправить заказ</button>
+                </div>
+            </div>
+        </form>
+        <a href="{% url 'order_view' %}" class="mx-5 btn bg-danger bg-opacity-25">Назад</a>
+    </div>
+    
+    {% endblock %}  

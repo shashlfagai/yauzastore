@@ -1,0 +1,29 @@
+{% extends 'shop/layout.html' %}
+{% load static %}
+{% load cart_filters %}
+{% block content %}
+<div class="container overflow-hidden text-center">
+    <h2>Вход</h2>
+
+    <form method="POST" action="{% url 'login' %}">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6 mb-3 text-start">
+                <label for="username" class="form-label">Имя пользователя:</label>
+                {{ form.username|add_class:"form-control" }}
+            </div>
+            <div class="col-md-6 mb-3 text-start">
+                <label for="password" class="form-label">Пароль:</label>
+                {{ form.password|add_class:"form-control" }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn bg-danger bg-opacity-25 mb-6">Войти</button>
+            </div>
+        </div>
+    </form>
+    <p>Еще нет аккаунта? <a href="{% url 'register' %}">Зарегистрироваться</a></p>
+</div>
+{% endblock %}
+

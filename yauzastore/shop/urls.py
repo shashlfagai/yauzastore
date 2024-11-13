@@ -1,0 +1,50 @@
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path(
+        '',
+        views.index,
+        name='home'
+    ),
+    path(
+        'about/',
+        views.about,
+        name='about'
+    ),
+    path(
+        'wear/',
+        views.wear,
+        name='wear'
+    ),
+    path(
+        'accessories/',
+        views.accessories,
+        name='accessories'
+    ),
+    path(
+        'promo/',
+        views.promo,
+        name='promo'
+    ),
+    path(
+        '<int:pk>',
+        views.ItemsDetailView.as_view(),
+        name='item-page'
+    ),
+    path(
+        'add/<int:pk>/',
+        views.add_to_order,
+        name='add_to_order'
+    ),
+    path(
+        'privacy_policy/',
+        views.privacy_policy,
+        name='privacy_policy'
+    ),
+    path(
+        'refund_and_exchange_policy/',
+        views.refund_and_exchange_policy,
+        name='refund_and_exchange_policy'
+    )
+]

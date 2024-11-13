@@ -1,0 +1,26 @@
+{% extends 'shop/layout.html' %}
+{% load static %}
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-1">
+            <h2 class="mb-5">Профиль пользователя</h2>
+            <div class="card-body">
+                <p><strong>Пользователь:</strong> {{ username }}</p>
+                <p><strong>Имя:</strong> {{ first_name }}</p>
+                <p><strong>Фамилия:</strong> {{ last_name }}</p>
+                <p><strong>Email:</strong> {{ email }}</p>
+                <p><strong>Номер телефона:</strong> {{ phone_number }}</p>
+                <p><strong>Ссылка на соц. сеть:</strong> {{ social_link }}</p>
+                <div class='mb-1'>
+                    <a href="{% url 'edit_account' %}" class="btn bg-danger bg-opacity-25 custom-mb-md">Редактировать профиль</a>
+                    <a href="{% url 'order_history' %}" class="btn bg-danger bg-opacity-25">Мои заказы</a>
+                </div>
+                <div>
+                    <a href="{% url 'logout' %}" class="btn bg-danger bg-opacity-50">Выйти</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
