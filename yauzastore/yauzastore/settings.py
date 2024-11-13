@@ -27,12 +27,12 @@ environ.Env.read_env(BASE_DIR / '.env')
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['yourdomain.com', 'www.yourdomain.com', '88.218.170.92']
 
 
-# Application definition
+# Application definitionc
 
 INSTALLED_APPS = [
     "shop",
@@ -157,6 +157,7 @@ LOGOUT_REDIRECT_URL = '/'
 CSRF_TRUSTED_ORIGINS = [
     'https://yourdomain.com',
     'https://www.yourdomain.com',
+    '88.218.170.92',
 ]
 
 
