@@ -167,3 +167,6 @@ logs/
 
 
 yauzastore/media
+yauzastore/staticfiles
+yauzastore/manage.py
+poetry.lock
