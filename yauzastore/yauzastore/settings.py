@@ -29,7 +29,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['89.223.71.131']
+ALLOWED_HOSTS = ['89.223.71.131', '127.0.0.1']
 
 
 # Application definitionc

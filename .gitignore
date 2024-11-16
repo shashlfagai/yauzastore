@@ -168,3 +168,5 @@ logs/
 
 yauzastore/media
 yauzastore/staticfiles
+
+backup.sql
