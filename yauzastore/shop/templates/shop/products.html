@@ -9,7 +9,7 @@
                 <div class="col">
                     <form method="GET" action="{% url current_view %}">
                         <input type="hidden" name="subcategory_id" value="{{ subcategory.id }}">
-                        <button type="submit" class="btn bg-danger bg-opacity-25">{{ subcategory.name }}</button>
+                        <button type="submit" class="btn bg-danger mb-2 bg-opacity-25">{{ subcategory.name }}</button>
                     </form>
                 </div>
             {% endfor %}

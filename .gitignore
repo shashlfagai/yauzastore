@@ -168,5 +168,6 @@ logs/
 
 yauzastore/media
 yauzastore/staticfiles
+yauzastore/yauzastore/settings
 
 backup.sql
