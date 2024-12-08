@@ -8,23 +8,23 @@
         {% csrf_token %}
         <div class="row">
             <div class="col-md-6 mb-3 text-start">
-                <label for="username" class="form-label">Имя пользователя:</label>
+                <label for="username" class="form-label">Имя пользователя:<span style="color:red">*</span></label>
                 {{ form.username|add_class:"form-control" }}
             </div>
             <div class="col-md-6 mb-3 text-start">
-                <label for="email" class="form-label">Email:</label>
+                <label for="email" class="form-label">Email:<span style="color:red">*</span></label>
                 {{ form.email|add_class:"form-control" }}
             </div>
             <div class="col-md-6 mb-3 text-start">
-                <label for="first_name" class="form-label">Имя:</label>
+                <label for="first_name" class="form-label">Имя:<span style="color:red">*</span></label>
                 {{ form.first_name|add_class:"form-control" }}
             </div>
             <div class="col-md-6 mb-3 text-start">
-                <label for="last_name" class="form-label">Фамилия:</label>
+                <label for="last_name" class="form-label">Фамилия:<span style="color:red">*</span></label>
                 {{ form.last_name|add_class:"form-control" }}
             </div>
             <div class="col-md-6 mb-3 text-start">
-                <label for="phone_number" class="form-label">Номер телефона:</label>
+                <label for="phone_number" class="form-label">Номер телефона:<span style="color:red">*</span></label>
                 {{ form.phone_number|add_class:"form-control" }}
             </div>
             <div class="col-md-6 mb-3 text-start">
@@ -32,11 +32,11 @@
                 {{ form.social_link|add_class:"form-control" }}
             </div>
             <div class="col-md-6 mb-3 text-start">
-                <label for="password1" class="form-label">Пароль:</label>
+                <label for="password1" class="form-label">Пароль:<span style="color:red">*</span></label>
                 {{ form.password1|add_class:"form-control" }}
             </div>
             <div class="col-md-6 mb-3 text-start">
-                <label for="password2" class="form-label">Подтвердите пароль:</label>
+                <label for="password2" class="form-label">Подтвердите пароль:<span style="color:red">*</span></label>
                 {{ form.password2|add_class:"form-control" }}
             </div>
             <div class="col-md-12 mb-3 text-start">

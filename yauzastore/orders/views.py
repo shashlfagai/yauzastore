@@ -368,6 +368,17 @@ def submit_order(request):
         if not hasattr(order.user, 'profile'):
             UserProfile.objects.create(user=order.user)
         order.phone_number = order.user.profile.phone_number
+        for item in order.items.all():
+            if item.size.quantity < item.quantity:
+                messages.error(
+                    request,
+                    f"Недостаточно товара {item.product.name} на складе."
+                )
+                return redirect('making_order_view')
+
+            # Списание товара
+            item.size.quantity -= item.quantity
+            item.size.save()
         order.save()
 
         # Сообщение об успешной отправке

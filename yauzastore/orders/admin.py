@@ -1,25 +1,55 @@
 from django.contrib import admin
-from .models import Order
+from .models import Order, OrderItem
+
+
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+    extra = 0
+    readonly_fields = (
+        'product',
+        'size',
+        'quantity',
+        'price',
+        'discount_price',
+        'bulk_discount',
+        'date_added'
+    )
 
 
 class OrderAdmin(admin.ModelAdmin):
     readonly_fields = (
         'user',
     )
+
     list_display = (
         'id',
         'user',
-        'email',
+        'phone_number',
         'status',
         'total_price',
-        'created_at'
+        'created_at',
+        'display_order_items'
     )
+
     list_filter = (
         'status',
         'created_at',
         'delivery_method',
         'payment_method'
     )
+
+    inlines = [OrderItemInline]
+
+    def display_order_items(self, obj):
+        order_items = obj.items.all()
+        items_info = []
+        for item in order_items:
+            size_name = item.size.size.name
+            items_info.append(
+                f"{item.product.name} ({size_name}) x {item.quantity}"
+            )
+        return ", ".join(items_info)
+    display_order_items.short_description = 'Товары'
 
 
 class PromoCodeAdmin(admin.ModelAdmin):
