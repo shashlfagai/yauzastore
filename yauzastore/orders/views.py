@@ -382,7 +382,7 @@ def submit_order(request):
         order.save()
 
         # Сообщение об успешной отправке
-        messages.success(request, 'Ваш заказ был успешно отправлен!')
+        messages.success(request, 'Ваш заказ был успешно отправлен! Вы можете забрать в нашем шоу-руме!')
 
         # Перенаправление на страницу с информацией о заказе
         return redirect(reverse('order_detail', args=[order.id]))
