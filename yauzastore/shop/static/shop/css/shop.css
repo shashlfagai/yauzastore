@@ -237,29 +237,34 @@ header {
 }
 
 .logo-header {
+    margin-top: 16px;
     height: 20px;
 }
 
 @media (max-width: 1010px) {
     .logo-header {
+        margin-top: 19px;
         height: 18px;
     }
 }
 
 @media (min-width: 1200px) {
     .logo-header {
+        margin-top: 10px;
         height: 35px;
     }
 }
 
 @media (max-width: 495px) {
     .logo-header {
+        margin-top: 20px;
         height: 15px;
     }
 }
 
 @media (max-width: 390px) {
     .logo-header {
+        margin-top: 23px;
         height: 10px;
     }
 }

@@ -30,7 +30,7 @@
             <div class="wrapper">
                 <header>
                     <div class="container-fluid">
-                        <div class="row d-flex align-items-center justify-content-between">
+                        <div class="row d-flex justify-content-between">
                             <div class="col">
                                 <nav class="navbar navbar-expand-lg bg-transparent">
                                     <div class="container-fluid">
@@ -42,16 +42,24 @@
                                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                                             <ul class="navbar-nav nav-underline me-auto mb-2 mb-lg-0">
                                                 <li class="nav-item">
-                                                    <a class="nav-link {% if request.path == wear_url %} active {% endif %}" href="{% url 'wear' %}">Одежда</a>
+                                                    <a class="nav-link {% if request.path == wear_url %} active {% endif %}" href="{% url 'wear' %}">
+                                                        Одежда
+                                                    </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link {% if request.path == accessories_url %} active {% endif %}" href="{% url 'accessories' %}">Аксессуары</a>
+                                                    <a class="nav-link {% if request.path == accessories_url %} active {% endif %}" href="{% url 'accessories' %}">
+                                                        Аксессуары
+                                                    </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link {% if request.path == promo_url %} active {% endif %}" href="{% url 'promo' %}">Скидки</a>
+                                                    <a class="nav-link {% if request.path == promo_url %} active {% endif %}" href="{% url 'promo' %}">
+                                                        Скидки
+                                                    </a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a class="nav-link {% if request.path == about_url %} active {% endif %}" href="{% url 'about' %}">О нас</a>
+                                                    <a class="nav-link {% if request.path == about_url %} active {% endif %}" href="{% url 'about' %}">
+                                                        О нас
+                                                    </a>
                                                 </li>
                                             </ul>
                                         </div>
