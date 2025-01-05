@@ -46,5 +46,25 @@ urlpatterns = [
         'refund_and_exchange_policy/',
         views.refund_and_exchange_policy,
         name='refund_and_exchange_policy'
-    )
+    ),
+    path(
+        'realization/',
+        views.realization_request,
+        name='realization_request'
+    ),
+    path(
+        'rental/',
+        views.rental_request,
+        name='rental_request'
+    ),
+    path(
+        'partners_page/',
+        views.partners_page,
+        name='partners_page'
+    ),
+    path(
+        'form_other/',
+        views.other_request,
+        name='other_request'
+    ),
 ]

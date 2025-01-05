@@ -1,0 +1,69 @@
+{% extends 'shop/layout.html' %}
+{% load static %}
+{% load cart_filters %}
+{% block content %}
+<div class="container-fluid ms-3">
+    <div class="row row-cols-auto">
+        <div class="col">
+            <form method="GET" action="{% url 'partners_page' %}">
+                <input type="hidden" name="subcategory_id" value="{{ subcategory.id }}">
+                <button type="submit" class="btn bg-danger mb-2 bg-opacity-25">Назад</button>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="container overflow-hidden text-center">
+    <h2 class="mt-5">
+        Своя идея сотрудничества
+    </h2>
+    <form method="POST" action="{% url 'realization_request' %}">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-6 mb-3 text-start">
+                <label for="first_name" class="form-label">
+                    Имя:
+                </label>
+                {{ form.first_name|add_class:"form-control" }}
+            </div>
+            <div class="col-md-6 mb-3 text-start">
+                <label for="phone" class="form-label">
+                    Номер телефона:
+                </label>
+                {{ form.phone|add_class:"form-control" }}
+            </div>
+            <div class="col-md-6 mb-3 text-start">
+                <label for="contact_preference" class="form-label">
+                    Предпочтительный способ связи:
+                </label>
+                {{ form.contact_preference|add_class:"form-select" }}
+            </div>
+            <div class="col-md-6 mb-3 text-start">
+                <label for="social_link" class="form-label">
+                    Ссылка на соц. сети:
+                </label>
+                {{ form.social_link|add_class:"form-control" }}
+            </div>
+            <div class="col-md-12 mb-3 text-start">
+                <label for="additional_info" class="form-label">
+                    Опишите идею вашего сотрудничества:
+                </label>
+                {{ form.additional_info|add_class:"form-control" }}
+            </div>
+            <div class="col-md-12 mb-3 text-start">
+                <div class="form-check">
+                    {{ form.agree_to_privacy_policy|add_class:"form-check-input" }}
+                    <label for="agree_to_privacy_policy" class="form-check-label">
+                        Я соглашаюсь с <a href="{% url 'privacy_policy' %}" target="_blank">политикой конфиденциальности</a>
+                    </label>
+                </div>
+            </div>
+        <div class="row">
+            <div class="d-grid gap-2">
+                <button type="submit" class="btn bg-danger bg-opacity-25 mb-6">
+                    Отправить
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

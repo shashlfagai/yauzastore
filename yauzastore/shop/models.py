@@ -231,3 +231,89 @@ class StockBanner(models.Model):
     class Meta:
         verbose_name = "Баннер акции"
         verbose_name_plural = "Баннер акций"
+
+
+from django.db import models
+
+class PartnerProjects(models.Model):
+    FORM_TYPES = [
+        ('realization', 'Сдача товаров на реализацию'),
+        ('rental', 'Аренда места в шоуруме'),
+        ('other', 'Другие предложения'),
+    ]
+    STATUS_CHOICES = [
+        ('pending', 'В обработке'),
+        ('approved', 'Одобрено'),
+        ('rejected', 'Отказ'),
+    ]
+    form_type = models.CharField(
+        max_length=20,
+        choices=FORM_TYPES,
+        verbose_name='Форма'
+    )
+    first_name = models.CharField(max_length=100, verbose_name='Имя')
+    phone = models.CharField(max_length=20, verbose_name='Номер телефона')
+    contact_preference = models.CharField(
+        max_length=20,
+        choices=[
+            ('phone', 'По телефону'),
+            ('telegram', 'Telegram'),
+            ('whatsapp', 'WhatsApp'),
+        ],
+        verbose_name='Предпочтительный способ связи'
+    )
+    product_description = models.TextField(verbose_name='Описание проекта')
+    project_name = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True,
+        verbose_name='Название проекта'
+    )
+    product_link = models.URLField(
+        null=True,
+        blank=True,
+        verbose_name='Ссылка на примеры изделий/товаров'
+    )
+    social_link = models.URLField(verbose_name='Ссылка на соц. сети')
+    additional_info = models.TextField(
+        null=True, blank=True, verbose_name='Дополнительная информация'
+    )
+    shelf_preference = models.CharField(
+        max_length=50,
+        choices=[
+            ('eye_level', 'Полка на уровне глаз'),
+            ('below_eye', 'Полка чуть ниже уровня глаз'),
+            ('any', 'Любая полка'),
+        ],
+        null=True, blank=True, verbose_name='Предпочтительная полка'
+    )
+    equipment_preference = models.CharField(
+        max_length=20,
+        choices=[
+            ('table', 'Стол'),
+            ('rail', 'Рэйл'),
+            ('other', "Другое")
+        ],
+        null=True, blank=True, verbose_name='Оборудование'
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='pending',
+        verbose_name='Статус заявки'
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата подачи'
+    )
+    agree_to_privacy_policy = models.BooleanField(
+        default=False,
+        verbose_name='Согласен с политикой конфиданциальности'
+        )
+
+    def __str__(self):
+        return f"{self.get_form_type_display()} - {self.project_name} {self.first_name} ({self.phone}) {self.get_status_display()}"
+
+    class Meta:
+        verbose_name = 'Заявка на партнерство'
+        verbose_name_plural = 'Заявки на партнерство'

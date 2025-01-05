@@ -5,7 +5,7 @@ from .models import StockBanner, Product, Category, ProductSize
 from django.views.generic import DetailView
 from django.db.models import OuterRef, Subquery, Sum, IntegerField
 from django.db.models.functions import Coalesce
-from .forms import AddToCartForm
+from .forms import AddToCartForm, RealizationForm, RentalForm, OtherForm
 from orders.models import OrderItem
 from django.utils import timezone
 from django.core.paginator import Paginator
@@ -245,3 +245,58 @@ def privacy_policy(request):
 
 def refund_and_exchange_policy(request):
     return render(request, 'shop/refund_and_exchange_policy.html')
+
+
+def realization_request(request):
+    if request.method == 'POST':
+        form = RealizationForm(request.POST)
+        if form.is_valid():
+            project = form.save(commit=False)
+            project.form_type = 'realization'
+            project.save()
+            messages.success(
+                request,
+                'Ваша заявка была принята, в ближайшее время с вами свяжутся!'
+            )
+            return redirect('partners_page')
+    else:
+        form = RealizationForm()
+    return render(request, 'shop/form_realization.html', {'form': form})
+
+
+def rental_request(request):
+    if request.method == 'POST':
+        form = RentalForm(request.POST)
+        if form.is_valid():
+            project = form.save(commit=False)
+            project.form_type = 'rental'
+            project.save()
+            messages.success(
+                request,
+                'Ваша заявка была принята, в ближайшее время с вами свяжутся!'
+            )
+            return redirect('partners_page')
+    else:
+        form = RentalForm()
+    return render(request, 'shop/form_rental.html', {'form': form})
+
+
+def other_request(request):
+    if request.method == 'POST':
+        form = RentalForm(request.POST)
+        if form.is_valid():
+            project = form.save(commit=False)
+            project.form_type = 'other'
+            project.save()
+            messages.success(
+                request,
+                'Ваша заявка была принята, в ближайшее время с вами свяжутся!'
+            )
+            return redirect('partners_page')
+    else:
+        form = OtherForm()
+    return render(request, 'shop/form_other.html', {'form': form})
+
+
+def partners_page(request):
+    return render(request, 'shop/partners_page.html')

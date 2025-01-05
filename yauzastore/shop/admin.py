@@ -1,6 +1,13 @@
 from django.contrib import admin
 from django.utils.html import format_html
-from .models import Product, ProductSize, Promo, ProductImage, StockBanner
+from .models import (
+    Product,
+    ProductSize,
+    Promo,
+    ProductImage,
+    StockBanner,
+    PartnerProjects
+)
 from orders.models import PromoCode, BulkDiscount
 
 
@@ -66,6 +73,23 @@ class SubCategoryAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
+class PartnerProjectsAdmin(admin.ModelAdmin):
+    list_display = (
+        'form_type',
+        'project_name',
+        'phone',
+        'first_name',
+        'status',
+        'created_at',
+        'agree_to_privacy_policy'
+    )
+    list_filter = ('form_type', 'status', 'created_at')
+    search_fields = ('first_name', 'last_name', 'phone', 'project_name')
+    ordering = ('-created_at',)
+    readonly_fields = ('created_at','agree_to_privacy_policy',)
+
+
 admin.site.register(Product, ProductAdmin)
 admin.site.register(StockBanner)
 admin.site.register(Promo, PromoAdmin)
+admin.site.register(PartnerProjects, PartnerProjectsAdmin)

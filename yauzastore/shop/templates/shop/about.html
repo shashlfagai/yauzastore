@@ -1,6 +1,16 @@
 {% extends 'shop/layout.html' %}
 {% load static %}
 {% block content %}
+<div class="container-fluid ms-3">
+    <div class="row row-cols-auto">
+        <div class="col">
+            <form method="GET" action="{% url 'partners_page' %}">
+                <input type="hidden" name="partners_page">
+                <button type="submit" class="btn bg-danger mb-2 bg-opacity-25">Для дизайнеров</button>
+            </form>
+        </div>
+    </div>
+</div>
 <div class="logo-about-container">
     <img src="{% static 'shop/img/logo.jpg' %}" alt="logo-about" class="logo-about">
 </div>
