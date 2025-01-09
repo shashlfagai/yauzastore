@@ -6,7 +6,8 @@ from .models import (
     Promo,
     ProductImage,
     StockBanner,
-    PartnerProjects
+    PartnerProjects,
+    SubCategory
 )
 from orders.models import PromoCode, BulkDiscount
 
@@ -93,3 +94,4 @@ admin.site.register(Product, ProductAdmin)
 admin.site.register(StockBanner)
 admin.site.register(Promo, PromoAdmin)
 admin.site.register(PartnerProjects, PartnerProjectsAdmin)
+admin.site.register(SubCategory)
