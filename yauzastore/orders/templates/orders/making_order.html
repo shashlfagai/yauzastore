@@ -5,7 +5,7 @@
 {% block content %}
     <div class="col-md-8 offset-md-1">
         <h2 class="m-3">Оформление заказа:</h2>
-        <div class="card p-3 p-sm-4 m-5">
+        <div class="card p-3 p-sm-4 m-5" style="background-color: #ebebeb;">
             <div class="row">
                 {% for item in items %}
                 <div class="row align-items-center">
@@ -38,7 +38,7 @@
             
             <!-- Выбор способа доставки -->
             <h3 class="m-3">Выберете способ доставки:</h3>
-            <div class="card my-5 p-3 p-sm-4 m-5">
+            <div class="card my-5 p-3 p-sm-4 m-5" style="background-color: #ebebeb;">
                 <div class="row">
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="shipping_method" value="pickup" id="pickup" checked>
@@ -57,7 +57,7 @@
             </div>
             <!-- Выбор способа оплаты -->
             <h3 class="m-3">Выберете способ оплаты:</h3>
-            <div class="card mx-5 mb-3 p-3 p-sm-4">
+            <div class="card mx-5 mb-3 p-3 p-sm-4" style="background-color: #ebebeb;">
                 <div class="row">
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="payment_method" value="cash" id="cash" checked>

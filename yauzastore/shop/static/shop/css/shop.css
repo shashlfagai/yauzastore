@@ -167,7 +167,7 @@ header {
     padding-bottom: 50px;
 }
 /* Медиазапросы для маленьких экранов */
-@media (max-width: 750px) {
+@media (max-width: 990px) {
     .item-info {
         flex-direction: column; /* Изменяем направление на колонку для маленьких экранов */
         height: auto; /* Меняем высоту на auto */
@@ -176,7 +176,7 @@ header {
 
     .item-info-image,
     .item-description {
-        width: 90%; /* Задаем ширину 90% для удобства на маленьких экранах */
+        width: 98.3%; /* Задаем ширину 90% для удобства на маленьких экранах */
         margin: 0 auto; /* Центрируем контейнеры */
     }
 }

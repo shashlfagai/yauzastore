@@ -3,50 +3,81 @@
 {% load cart_filters %}
 
 {% block content %}
-<div class="container-fluid ms-3">
-    <button type="button" class="btn bg-danger bg-opacity-25" onclick="window.history.back()">Назад</button>
-</div>
-<div class="container text-center">
-    <div class="row item-info">
-        <div class="col col-md-5 offset-3 justify-content-md-left item-info-image">
-            <img src="{{ item.images.first.image.url }}" alt="item" class="img-fluid">
-        </div>
-        <div class="col col-md-3 bordered d-flex flex-column justify-content-between px-4 item-description">
+
+
+    <div class="container-fluid">
+
+        <div class="row">
             <div>
-                <h3 class="item-page-name"><strong>{{ item.name }}</strong></h3>
-                <p>{{ item.description }}</p>
-            </div>
-            <div class="my-auto">
-                {% if item.has_discount %}
-                    <p><span class="price-number">{{ item.get_discounted_price }}</span></p>
-                    <p><span style="text-decoration: line-through;">{{ item.price }}</span></p>
-                {% else %}
-                    <p><span class="price-number">{{ item.price }}</span></p>
-                {% endif %}
-            </div>
-            <div class="container text-center">
-                {% if total_quantity > 0 %}
-                    <form method="post" action="{% url 'add_to_order' item.id %}">
-                        <div class="container-fluid" style="margin-bottom: 20px;">
-                            {% csrf_token %}
-                            {{ form.as_p }}
-                            <div class="d-grid gap-2">
-                                <button type="submit" class="btn bg-danger bg-opacity-25 btn-sm">Добавить в корзину</button>
-                            </div>
-                        </div>
-                    </form>
-                {% else %}
-                    <p class="text-danger">Этот товар больше не доступен для покупки.</p>
-                {% endif %}
+                <button type="button" class="btn bg-danger bg-opacity-25 ms-3 mb-5" onclick="window.history.back()">
+                    Назад
+                </button>
             </div>
         </div>
+        
+        <div class="row g-0 m-3">
+
+            <div class="col-12 col-lg-6 pe-lg-3">
+                <img src="{{ item.images.first.image.url }}" alt="item" class="img-fluid mb-3 mb-lg-0">
+            </div>
+    
+            <div class="col-12 col-lg-6 card rounded-0 text-center">
+                <div class="card-body d-flex flex-column">
+                    <h2 class="card-title">
+                        <strong>{{ item.name }}</strong>
+                    </h2>
+                    <div class="container-fluid mb-5 mt-2" style="margin-bottom: 20px;">
+                        <div class="d-grid gap-2 d-lg-none">
+                            <button class="btn bg-danger bg-opacity-25 btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                                Описание
+                            </button>
+                        </div>
+                    </div>
+                    <div class="collapse d-lg-none" id="collapseExample">
+                        <div style="margin-bottom: 20px;">
+                            {{ item.description|linebreaks }}
+                        </div>
+                    </div>
+                    <div class="d-none d-lg-block" style="margin-bottom: 20px;">
+                        {{ item.description|linebreaks }}
+                    </div>
+                    <p class="card-text mb-auto mt-auto">
+                        {% if item.has_discount %}
+                        <p><span class="price-number">{{ item.get_discounted_price }}</span></p>
+                        <p><span style="text-decoration: line-through;">{{ item.price }}</span></p>
+                        {% else %}
+                        <p><span class="price-number">{{ item.price }}</span></p>
+                        {% endif %}
+                    </p>
+                    {% if total_quantity > 0 %}
+                        <form method="post" action="{% url 'add_to_order' item.id %}">
+                            <div class="container-fluid" style="margin-bottom: 20px;">
+                                {% csrf_token %}
+                                {{ form.as_p }}
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn bg-danger bg-opacity-25 btn-sm">Добавить в корзину</button>
+                                </div>
+                            </div>
+                        </form>
+                    {% else %}
+                        <p class="text-danger">Этот товар больше не доступен для покупки.</p>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col col-8 offset-3 flex-column justify-content-between px-4 item-description item-info-image item-additional-images">
+                {% for image in item.images.all %}
+                    {% if image != item.images.first %}
+                        <img src="{{ image.image.url }}" alt="item" class="img-fluid mb-3">
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
     </div>
-    <div class="col col-8 offset-3 flex-column justify-content-between px-4 item-description item-info-image item-additional-images">
-        {% for image in item.images.all %}
-            {% if image != item.images.first %}
-                <img src="{{ image.image.url }}" alt="item" class="img-fluid">
-            {% endif %}
-        {% endfor %}
-    </div>
-</div>
+
 {% endblock %}
+

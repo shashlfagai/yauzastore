@@ -10,42 +10,42 @@
             <div class="row gx-5">
                 {% for item in items %}
                 <div class="col-md-6 mb-4 d-flex align-items-center justify-content-center">
-                    <div class="card d-flex align-items-center justify-content-center" style="height: 300px">
+                    <div class="card d-flex align-items-center justify-content-center" style="background-color: #ebebeb;">
                         <form method="post" action="{% url 'remove_from_order' item.id %}" style="position: absolute; top: 10px; right: 10px;">
                             {% csrf_token %}
                             <button type="submit" class="btn-close" aria-label="Close"></button>
                         </form>
-                        <div class="row g-4 d-flex align-items-center justify-content-center">
+                        <div class="row g-0 d-flex align-items-center justify-content-center">
                             <div class="col-6">
-                                <img src="{{ item.product.images.first.image.url }}" class="img-fluid rounded-center" alt="{{ item.product.name }}" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                                <img src="{{ item.product.images.first.image.url }}" class="img-fluid rounded-start" alt="{{ item.product.name }}">
                             </div>
                             <div class="col-6 d-flex justify-content-center">
                                 <div class="card-body text-start">
-                                    <h5 class="card-title">{{ item.product.name }}, размер {{ item.size.size }}</h5>
+                                    <p class="card-title fw-semibold" style="font-size: clamp(1rem, 1.5vw, 2rem);">{{ item.product.name }},<br />размер {{ item.size.size }}</p>
                                     {% if item.discount_price != item.price %}
-                                        <p class="card-text"><span style="text-decoration: line-through;">Цена: {{ item.product.price }}</span></p>
-                                        <p class="card-text">Цена: {{ item.discount_price }}</p>
+                                        <p class="card-text"><span style="text-decoration: line-through; font-size: clamp(0.5rem, 1.5vw, 2rem);">Цена: {{ item.product.price }}</span></p>
+                                        <p class="card-text" style="font-size: clamp(0.5rem, 1.5vw, 2rem);">Цена: {{ item.discount_price }}</p>
                                     {% elif item.product.has_discount %}
-                                        <p><span style="text-decoration: line-through;">Цена: {{ item.product.price }}</span></p>
-                                        <p>Цена: {{ item.product.get_discounted_price }}</p>
+                                        <p><span style="text-decoration: line-through; font-size: clamp(0.5rem, 1.5vw, 2rem);">Цена: {{ item.product.price }}</span></p>
+                                        <p style="font-size: clamp(0.5rem, 1.5vw, 2rem);">Цена: {{ item.product.get_discounted_price }}</p>
                                     {% else %}
-                                        <p class="card-text">Цена: {{ item.product.price }}</p>
+                                        <p class="card-text" style="font-size: clamp(0.8rem, 1.5vw, 2rem);">Цена: {{ item.product.price }}</p>
                                     {% endif %}
 
                                     <div class="container text-center">
 
-                                        <div class="row d-flex align-items-center justify-content-center border border-dark rounded">
+                                        <div class="row d-flex align-items-center text-center justify-content-center border border-dark rounded">
 
-                                            <div class="col-4 text-center border border-dark rounded-start border-0 bg-body-secondary bg-opacity-25">
-                                                <form method="post" action="{% url 'update_order_quantity' %}" style="display: inline;">
+                                            <div class="col-4 text-center rounded-start border-0">
+                                                <form method="post" class="text-center" action="{% url 'update_order_quantity' %}" style="display: inline;">
                                                     {% csrf_token %}
                                                     <input type="hidden" name="item_id" value="{{ item.id }}">
                                                     <input type="hidden" name="operation" value="decrease">
-                                                    <button type="submit" class="btn">-</button>
+                                                    <button type="submit" class="btn" style="font-size: clamp(0.8rem, 1.5vw, 2rem);">-</button>
                                                 </form>
                                             </div>
 
-                                            <div class="col-4 text-center">
+                                            <div class="col text-center" style="font-size: clamp(0.8rem, 1.5vw, 1.5rem);">
                                                 <span>{{ item.quantity }}</span>
                                             </div>
 
@@ -54,7 +54,7 @@
                                                     {% csrf_token %}
                                                     <input type="hidden" name="item_id" value="{{ item.id }}">
                                                     <input type="hidden" name="operation" value="increase">
-                                                    <button type="submit" class="btn">+</button>
+                                                    <button type="submit" class="btn" style="font-size: clamp(0.8rem, 1.5vw, 2rem);">+</button>
                                                 </form>
                                             </div>
 
@@ -85,7 +85,7 @@
                     </form>
                 </div>
             {% endif %}
-            <div class="total-order-price bg-body-secondary bg-opacity-75">
+            <div class="total-order-price rounded px-2" style="background-color: #ebebeb;">
                 СУММА: {{ total_discount_cost }}
             </div>
             
@@ -104,27 +104,27 @@
         {% if items %}
             <div class="row gx-5">
                 {% for item in items %}
-                    <div class="col-md-6 mb-4 d-flex align-items-center justify-content-center">
-                        <div class="card d-flex align-items-center justify-content-center" style="height: 300px">
+                    <div class="col-md-6 mb-4 d-flex align-items-center justify-content-center" style="background-color: #ebebeb;">
+                        <div class="card d-flex align-items-center justify-content-center">
                             <form method="post" action="{% url 'remove_from_order' item|get_item:'product_id' %}" style="position: absolute; top: 10px; right: 10px;">
                                 {% csrf_token %}
                                 <button type="submit" class="btn-close" aria-label="Close"></button>
                             </form>
-                            <div class="row g-4 d-flex align-items-center justify-content-center">
+                            <div class="row g-0 d-flex align-items-center justify-content-center">
                                 <div class="col-6">
-                                    <img src="{{ item|get_item:'image' }}" class="img-fluid" alt="{{ item.product.name }}">
+                                    <img src="{{ item|get_item:'image' }}" class="img-fluid rounded-start" alt="{{ item.product.name }}">
                                 </div>
                                 <div class="col-6 d-flex flex-column justify-content-center">
                                     <div class="card-body text-start">
-                                        <h5 class="card-title">{{ item|get_item:'product' }}, размер {{ item|get_item:'size' }}</h5>
+                                        <p class="card-title fw-semibold" style="font-size: clamp(1rem, 1.5vw, 3rem);">{{ item|get_item:'product' }}, размер {{ item|get_item:'size' }}</p>
                                         {% if item|get_item:'discount_price' != item|get_item:'price' %}
-                                            <p class="card-text"><span style="text-decoration: line-through;">Цена: {{ item|get_item:'price' }}</span> ₽</p>
-                                            <p class="card-text">Цена: {{ item|get_item:'discount_price' }} ₽</p>
+                                            <p class="card-text"><span style="text-decoration: line-through; font-size: clamp(0.5rem, 1vw, 2rem);">Цена: {{ item|get_item:'price' }}</span> ₽</p>
+                                            <p class="card-text" style="font-size: clamp(0.5rem, 1vw, 2rem);">Цена: {{ item|get_item:'discount_price' }} ₽</p>
                                         {% elif item.product.has_discount %}
-                                            <p><span style="text-decoration: line-through;">Цена: {{ item.product.price }}</span> ₽</p>
-                                            <p>Цена: {{ item.product.get_discounted_price }}</p>
+                                            <p><span style="text-decoration: line-through; font-size: clamp(0.5rem, 1vw, 2rem);">Цена: {{ item.product.price }}</span> ₽</p>
+                                            <p style="font-size: clamp(0.5rem, 1vw, 2rem);">Цена: {{ item.product.get_discounted_price }}</p>
                                         {% else %}
-                                            <p class="card-text">Цена: {{ item|get_item:'price' }} ₽</p>
+                                            <p class="card-text" style="font-size: clamp(0.5rem, 1vw, 2rem);">Цена: {{ item|get_item:'price' }} ₽</p>
                                         {% endif %}
                                         <div class="container">
 
@@ -164,7 +164,7 @@
                     </div>
                 {% endfor %}
             </div>
-            <div class="total-order-price bg-body-secondary bg-opacity-75">
+            <div class="total-order-price rounded px-2" style="background-color: #ebebeb;">
                 СУММА: {{ total_discount_cost }}
             </div>
             <form action="{% url 'making_order' %}" method="GET">
