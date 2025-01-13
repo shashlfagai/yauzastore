@@ -3,7 +3,7 @@ from orders.views import get_user_order
 from django.contrib import messages
 from .models import StockBanner, Product, Category, ProductSize
 from django.views.generic import DetailView
-from django.db.models import OuterRef, Subquery, Sum, IntegerField
+from django.db.models import OuterRef, Subquery, Sum, IntegerField, Count, Q
 from django.db.models.functions import Coalesce
 from .forms import AddToCartForm, RealizationForm, RentalForm, OtherForm
 from orders.models import OrderItem
@@ -68,7 +68,13 @@ def about(request):
 
 def wear(request):
     category = Category.objects.get(id=4)
-    subcategories = category.subcategories.all()
+    subcategories = category.subcategories.annotate(
+        total_quantity=Sum(
+            'products__sizes__quantity',
+            filter=Q(products__categories=category, products__sizes__quantity__gt=0)
+        )
+    ).filter(total_quantity__gt=0)
+
     category_id = category.id
     subcategory_id = request.GET.get('subcategory_id')
     product_sizes = ProductSize.objects.filter(
@@ -99,7 +105,13 @@ def wear(request):
 
 def accessories(request):
     category = Category.objects.get(id=5)
-    subcategories = category.subcategories.all()
+    subcategories = category.subcategories.annotate(
+        total_quantity=Sum(
+            'products__sizes__quantity',
+            filter=Q(products__categories=category, products__sizes__quantity__gt=0)
+        )
+    ).filter(total_quantity__gt=0)
+
     subcategory_id = request.GET.get('subcategory_id')
     category_id = category.id
     product_sizes = ProductSize.objects.filter(
