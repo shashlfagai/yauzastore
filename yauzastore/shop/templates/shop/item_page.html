@@ -38,7 +38,7 @@
                             {{ item.description|linebreaks }}
                         </div>
                     </div>
-                    <div class="d-none d-lg-block" style="margin-bottom: 20px;">
+                    <div class="d-none d-lg-block description-text" style="margin-bottom: 20px;">
                         {{ item.description|linebreaks }}
                     </div>
                     <p class="card-text mb-auto mt-auto">
@@ -68,7 +68,7 @@
         </div>
 
         <div class="row">
-            <div class="col col-8 offset-3 flex-column justify-content-between px-4 item-description item-info-image item-additional-images">
+            <div class="col col-8 offset-2 justify-content-between px-4 item-description item-info-image item-additional-images">
                 {% for image in item.images.all %}
                     {% if image != item.images.first %}
                         <img src="{{ image.image.url }}" alt="item" class="img-fluid mb-3">
