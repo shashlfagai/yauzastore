@@ -15,6 +15,7 @@ django-money = "^3.5.2"
 pytest = "^8.3.3"
 pytest-django = "^4.9.0"
 django-environ = "^0.11.2"
+yookassa = "^3.5.0"
 
 
 [build-system]

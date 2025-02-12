@@ -41,5 +41,10 @@ urlpatterns = [
         'submit_order/',
         views.submit_order,
         name='submit_order'
-    )
+    ),
+    path(
+        'yookassa/webhook/',
+        views.yookassa_webhook,
+        name='yookassa_webhook'
+    ),
 ]

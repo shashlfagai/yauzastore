@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from djmoney.models.fields import MoneyField
 from djmoney.money import Money
 from django.utils import timezone
+from yookassa import Payment
 
 
 class PromoCode(models.Model):
@@ -307,3 +308,36 @@ class OrderTracking(models.Model):
     class Meta:
         verbose_name = "Отслеживание заказа"
         verbose_name_plural = "Отслеживание заказов"
+
+
+class Payment(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'В ожидании'),
+        ('succeeded', 'Оплачен'),
+        ('canceled', 'Отменен'),
+    ]
+
+    order = models.OneToOneField(
+        'orders.Order',
+        on_delete=models.CASCADE,
+        related_name='payment'
+    )
+    payment_id = models.CharField(
+        max_length=255,
+        unique=True
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='pending'
+    )
+    amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return f"Payment {self.payment_id} - {self.status}"

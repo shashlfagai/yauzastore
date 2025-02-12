@@ -1,8 +1,11 @@
+import uuid
+import json
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
-from .models import Order, OrderItem, PromoCode, BulkDiscount
+from .models import Order, OrderItem, PromoCode, BulkDiscount, Payment as PaymentModel
 from accounts.models import UserProfile
 from .forms import PromoCodeForm
 from shop.models import Product, ProductSize
@@ -10,6 +13,13 @@ from collections import defaultdict
 from djmoney.money import Money
 from decimal import InvalidOperation
 from django.urls import reverse
+from django.conf import settings
+from yookassa import Payment, Configuration, Webhook
+from yookassa.domain.notification import WebhookNotification
+
+
+Configuration.account_id = settings.YOOKASSA_SHOP_ID
+Configuration.secret_key = settings.YOOKASSA_SECRET_KEY
 
 
 def gather_discount_data(order_items):
@@ -356,7 +366,6 @@ def submit_order(request):
     if request.method == 'POST':
         # Получение заказа пользователя (предполагается, что он уже создан)
         order = get_user_order(request.user)
-
         # Получение выбранных значений из формы
         shipping_method = request.POST.get('shipping_method', 'pickup')
         payment_method = request.POST.get('payment_method', 'cash')
@@ -380,15 +389,87 @@ def submit_order(request):
             item.size.quantity -= item.quantity
             item.size.save()
         order.save()
+        if payment_method == 'online':
+            # Формируем данные для платежа
+            payment_data = {
+                "amount": {
+                    "value": str(order.total_price.amount),  # Сумма в формате строки
+                    "currency": 'RUB',
+                },
+                "confirmation": {
+                    "type": "redirect",
+                    "return_url": settings.YOOKASSA_RETURN_URL,  # URL возврата на сайт
+                },
+                "capture": True,  # Автоматическое списание
+                "description": f"Оплата заказа №{order.id}",
+            }
 
-        # Сообщение об успешной отправке
-        messages.success(request, 'Ваш заказ был успешно отправлен! Вы можете забрать в нашем шоу-руме!')
+            # Создаем платеж через ЮКассу
+            payment = Payment.create(payment_data, uuid.uuid4())
 
-        # Перенаправление на страницу с информацией о заказе
-        return redirect(reverse('order_detail', args=[order.id]))
+            # Сохраняем ID платежа в заказе
+            order.payment_id = payment.id
+            order.save()
+
+            # Перенаправляем на страницу оплаты ЮКассы
+            return redirect(payment.confirmation.confirmation_url)
+
+        # Если выбран способ оплаты наличными
+        else:
+            messages.success(
+                request,
+                'Ваш заказ был успешно отправлен! Вы можете забрать его в нашем шоу-руме!'
+            )
+            return redirect(reverse('order_detail', args=[order.id]))
 
     # В случае GET-запроса перенаправление на страницу оформления заказа
     return redirect('making_order_view')
+
+
+@csrf_exempt
+def yookassa_webhook(request):
+    """Обработчик уведомлений от ЮКассы."""
+    try:
+        # Читаем JSON-данные из запроса
+        data = json.loads(request.body.decode('utf-8'))
+        
+        # Проверяем, что пришло уведомление о платеже
+        if 'object' in data and data['object']['status']:
+            payment_status = data['object']['status']
+            payment_id = data['object']['id']
+
+            # Ищем заказ по payment_id
+            try:
+                order = Order.objects.get(payment_id=payment_id)
+            except Order.DoesNotExist:
+                return JsonResponse({"error": "Order not found"}, status=404)
+
+            # Обновляем статус заказа в зависимости от ответа ЮКассы
+            if payment_status == "succeeded":
+                order.status = "paid"  # Заказ оплачен
+            elif payment_status == "canceled":
+                order.status = "cancelled"  # Платеж отменен
+            else:
+                order.status = "pending"  # Ожидание
+
+            order.save()
+
+            return JsonResponse({"message": "Payment status updated successfully"}, status=200)
+        else:
+            return JsonResponse({"error": "Invalid webhook data"}, status=400)
+
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+
+
+
+def get_order_status(request, order_id):
+    """Возвращает текущий статус заказа."""
+    try:
+        order = Order.objects.get(id=order_id)
+        return JsonResponse({"status": order.status}, status=200)
+    except Order.DoesNotExist:
+        return JsonResponse({"error": "Order not found"}, status=404)
 
 
 @login_required
@@ -411,3 +492,4 @@ def get_user_order(user):
 def save_session_order(request, cart):
     request.session['cart'] = cart
     request.session.modified = True
+
