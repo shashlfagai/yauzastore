@@ -402,6 +402,21 @@ def submit_order(request):
                 },
                 "capture": True,  # Автоматическое списание
                 "description": f"Оплата заказа №{order.id}",
+                "receipt": {  # Добавляем чек
+                    "customer": {
+                        "email": str(order.user.email)
+                    },
+                    "items": [
+                        {
+                            "description": item.product.name,
+                            "quantity": str(item.quantity),
+                            "vat_code": 4,  # НДС, проверьте код у ЮKassa
+                            "payment_mode": "full_payment",
+                            "payment_subject": "commodity"
+                        }
+                        for item in order.items.all()
+                    ]
+                }
             }
 
             # Создаем платеж через ЮКассу
