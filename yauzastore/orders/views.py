@@ -1,5 +1,6 @@
 import uuid
 import json
+from decimal import Decimal
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
@@ -389,6 +390,8 @@ def submit_order(request):
             item.size.quantity -= item.quantity
             item.size.save()
         order.save()
+        product_discount, category_item_count, category_discount, subcategory_item_count, subcategory_discount = gather_discount_data(order.items.all())
+        
         if payment_method == 'online':
             # Формируем данные для платежа
             payment_data = {
@@ -406,18 +409,38 @@ def submit_order(request):
                     "customer": {
                         "email": str(order.user.email)
                     },
-                    "items": [
-                        {
-                            "description": item.product.name,
-                            "quantity": str(item.quantity),
-                            "vat_code": 4,  # НДС, проверьте код у ЮKassa
-                            "payment_mode": "full_payment",
-                            "payment_subject": "commodity"
-                        }
-                        for item in order.items.all()
-                    ]
+                    "items": []
                 }
             }
+            # Для каждого товара в заказе вычисляем стоимость с учетом скидок
+            procent_discount = 0
+            items = order.items.all().order_by('-date_added')
+            promo_code = order.promo_code
+            total_discount = apply_promotions(items, promo_code)
+            total_cost = calculate_total_cost(items)
+            total_discount_cost = total_cost - total_discount
+            if promo_code:
+                promo_code = str(promo_code.code)
+            for item in items:
+                # Добавляем товар в чек с его скорректированной стоимостью
+                if item.discount_price != item.price:
+                    discount_price = item.discount_price
+                elif item.product.has_discount:
+                    discount_price = item.product.get_discounted_price()
+                else:
+                    discount_price = item.product.price
+                print(f"{str(round(discount_price.amount, 2))}")
+                payment_data["receipt"]["items"].append({
+                    "description": item.product.name,
+                    'amount': {
+                        'value': str(round(discount_price.amount, 2)),
+                        'currency': "RUB"
+                    },
+                    "quantity": str(item.quantity),
+                    "vat_code": 4,
+                    "payment_mode": "full_payment",
+                    "payment_subject": "commodity"
+                })
 
             # Создаем платеж через ЮКассу
             payment = Payment.create(payment_data, uuid.uuid4())
