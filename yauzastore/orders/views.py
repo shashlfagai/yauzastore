@@ -429,7 +429,6 @@ def submit_order(request):
                     discount_price = item.product.get_discounted_price()
                 else:
                     discount_price = item.product.price
-                print(f"{str(round(discount_price.amount, 2))}")
                 payment_data["receipt"]["items"].append({
                     "description": item.product.name,
                     'amount': {
