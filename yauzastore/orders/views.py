@@ -436,7 +436,7 @@ def submit_order(request):
                         'currency': "RUB"
                     },
                     "quantity": str(item.quantity),
-                    "vat_code": 4,
+                    "vat_code": 1,
                     "payment_mode": "full_payment",
                     "payment_subject": "commodity"
                 })
