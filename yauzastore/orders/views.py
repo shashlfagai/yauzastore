@@ -126,6 +126,7 @@ def apply_discount_to_items(
                     total_discount += bulk_discount * item.quantity
             price = item.price
             item.discount_price = price.amount - bulk_discount.amount
+            item.save()
     return total_discount
 
 
@@ -369,7 +370,12 @@ def submit_order(request):
         order = get_user_order(request.user)
         # Получение выбранных значений из формы
         shipping_method = request.POST.get('shipping_method', 'pickup')
-        payment_method = request.POST.get('payment_method', 'cash')
+        payment_method = request.POST.get('payment_method', 'oline')
+        city = request.POST.get("city", "")
+        street = request.POST.get("street", "")
+        house = request.POST.get("house", "")
+        apartment = request.POST.get("apartment", "")
+        order.delivery_address = f'Город: { city }, { street }, { house }, квартира/офис: { apartment }' 
 
         # Установка выбранных методов и изменение статуса заказа
         order.delivery_method = shipping_method
@@ -389,6 +395,12 @@ def submit_order(request):
             # Списание товара
             item.size.quantity -= item.quantity
             item.size.save()
+        order.save()
+        delivery_cost = 0
+        if shipping_method == 'standard':  # Если выбрана доставка
+            delivery_cost = 300  # Стоимость доставки
+        order.delivery_cost = delivery_cost
+        order.total_price += Money(order.delivery_cost, 'RUB')
         order.save()
         product_discount, category_item_count, category_discount, subcategory_item_count, subcategory_discount = gather_discount_data(order.items.all())
         
@@ -429,7 +441,7 @@ def submit_order(request):
                     discount_price = item.product.get_discounted_price()
                 else:
                     discount_price = item.product.price
-                payment_data["receipt"]["items"].append({
+                    payment_data["receipt"]["items"].append({
                     "description": item.product.name,
                     'amount': {
                         'value': str(round(discount_price.amount, 2)),
@@ -440,7 +452,18 @@ def submit_order(request):
                     "payment_mode": "full_payment",
                     "payment_subject": "commodity"
                 })
-
+            if shipping_method == 'standard':  # Если выбрана доставка
+                payment_data["receipt"]["items"].append({
+                    "description": "Доставка",
+                    'amount': {
+                        'value': str(round(delivery_cost, 2)),
+                        'currency': "RUB"
+                    },
+                    "quantity": "1",
+                    "vat_code": 1,
+                    "payment_mode": "full_payment",
+                    "payment_subject": "service"
+                })
             # Создаем платеж через ЮКассу
             payment = Payment.create(payment_data, uuid.uuid4())
 
@@ -453,6 +476,7 @@ def submit_order(request):
 
         # Если выбран способ оплаты наличными
         else:
+    
             messages.success(
                 request,
                 'Ваш заказ был успешно отправлен! Вы можете забрать его в нашем шоу-руме!'
@@ -483,11 +507,11 @@ def yookassa_webhook(request):
 
             # Обновляем статус заказа в зависимости от ответа ЮКассы
             if payment_status == "succeeded":
-                order.status = "paid"  # Заказ оплачен
+                order.payment_status = "paid"  # Заказ оплачен
             elif payment_status == "canceled":
-                order.status = "cancelled"  # Платеж отменен
+                order.payment_status = "cancelled"  # Платеж отменен
             else:
-                order.status = "pending"  # Ожидание
+                order.payment_status = "pending"  # Ожидание
 
             order.save()
 
@@ -518,6 +542,7 @@ def order_history(request):
 @login_required
 def order_detail(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
+    apply_promotions(order.items.all())
     return render(request, 'orders/order_detail.html', {'order': order})
 
 

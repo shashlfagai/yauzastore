@@ -3,6 +3,21 @@
 {% load cart_filters %}
 
 {% block content %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let pickupRadio = document.getElementById("pickup");
+        let deliveryRadio = document.getElementById("standard");
+        let deliveryInfo = document.getElementById("delivery-info");
+
+        function toggleDeliveryFields() {
+            deliveryInfo.style.display = deliveryRadio.checked ? "block" : "none";
+        }
+
+        pickupRadio.addEventListener("change", toggleDeliveryFields);
+        deliveryRadio.addEventListener("change", toggleDeliveryFields);
+    });
+</script>
+
     <div class="col-md-8 offset-md-1">
         <h2 class="m-3">Оформление заказа:</h2>
         <div class="card p-3 p-sm-4 m-5" style="background-color: #ebebeb;">
@@ -15,7 +30,20 @@
         
                     <div class="col-8">
                         <div class="card-body">
-                            <p><strong>{{ item.product.name }}</strong><br>Размер: {{ item.size }}<br>Количество: {{ item.quantity }}<br>Цена: {{ item.price }}</p>
+                            <p>
+                                <strong>{{ item.product.name }}</strong><br>
+                                Размер: {{ item.size }}<br>
+                                Количество: {{ item.quantity }}<br>
+                                {% if item.discount_price != item.price %}
+                                    <span style="text-decoration: line-through;">Цена: {{ item.product.price }}</span><br>
+                                    Цена: {{ item.discount_price }}
+                                {% elif item.product.has_discount %}
+                                    <span style="text-decoration: line-through;">Цена: {{ item.product.price }}</span><br>
+                                    Цена: {{ item.product.get_discounted_price }}
+                                {% else %}
+                                    Цена: {{ item.price }}<br>
+                                {% endif %}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -48,10 +76,36 @@
                     </div>
                     <hr class="my-4">
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="shipping_method" value="cdek" id="cdek" disabled>
-                        <label class="form-check-label" for="cdek">
-                            Доставка в пункт выдачи CDEK (пока не доступен)
+                        <input class="form-check-input" type="radio" name="shipping_method" value="standard" id="standard">
+                        <label class="form-check-label" for="standard">
+                            Доставка
                         </label>
+                    </div>
+                </div>
+            </div>
+            <!-- Блок с формой адреса (скрыт по умолчанию) -->
+            <div id="delivery-info" class="card mx-5 p-3 p-sm-4" style="background-color: #ebebeb; display: none;">
+                <h5>Информация о доставке</h5>
+                <p>Доставка осуществляется курьерской службой. Стоимость доставки — 300₽.</p>
+                
+                <div class="mb-3">
+                    <label for="city" class="form-label">Город</label>
+                    <input type="text" class="form-control" name="city" id="city" placeholder="Например, Москва">
+                </div>
+                
+                <div class="mb-3">
+                    <label for="street" class="form-label">Улица</label>
+                    <input type="text" class="form-control" name="street" id="street" placeholder="Например, Тверская">
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="house" class="form-label">Дом</label>
+                        <input type="text" class="form-control" name="house" id="house" placeholder="Например, 10">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="apartment" class="form-label">Квартира</label>
+                        <input type="text" class="form-control" name="apartment" id="apartment" placeholder="Например, 25">
                     </div>
                 </div>
             </div>

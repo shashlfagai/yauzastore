@@ -8,15 +8,47 @@
     <div class="card my-5 p-3 p-sm-4 m-3">
         <div class="row">
             <div class="card-body">
-                <p><strong>Статус:</strong> {{ order.get_status_display }}</p>   
+                <p><strong>Готовность:</strong> {{ order.get_status_display }}</p>
+                <p><strong>Статус оплаты:</strong> 
+                    {% if order.payment_method == 'cash' %}
+                        Ожидает оплаты в шоу-руме.
+                    {% else %}
+                        {% if order.payment_status == "succeeded" %}
+                            Заказ оплачен
+                        {% elif order.payment_status == "canceled" %}
+                            Платеж отменен
+                        {% else %}
+                            Ожидание
+                        {% endif %}
+                    {% endif %}
+                </p>
                 <p><strong>Сумма:</strong> {{ order.total_price }}</p>
                 <div class="list-group mb-3">
                     <a class="list-group-item list-group-item-action bg-danger bg-opacity-25" aria-current="true">
                         Товары:
                     </a>
                     {% for item in order.get_items %}
-                        <a href="{% url 'item-page' item.product.id %}" class="list-group-item list-group-item-action">{{ item.product.name }} ({{ item.quantity }} шт.) - {{ item.price }}</a>
+                        <a href="{% url 'item-page' item.product.id %}" class="list-group-item list-group-item-action">{{ item.product.name }} ({{ item.quantity }} шт.) - 
+                            {% if item.discount_price != item.price %}
+                                <span style="text-decoration: line-through;">Цена: {{ item.product.price }}</span>
+                                Цена: {{ item.discount_price }}
+                            {% elif item.product.has_discount %}
+                                <span style="text-decoration: line-through;">Цена: {{ item.product.price }}</span>
+                                Цена: {{ item.product.get_discounted_price }}
+                            {% else %}
+                                Цена: {{ item.price }}
+                            {% endif %}
+                        </a>
                     {% endfor %}
+                    <a class="list-group-item list-group-item-action bg-danger bg-opacity-25" aria-current="true">
+                        Способ получения:
+                    </a>
+                    {% if order.delivery_cost > 0 %}
+                        <a class="list-group-item list-group-item-action"><strong>Доставка по адресу или в ПВЗ сдек:</strong> {{ order.delivery_cost }} ₽</a>
+                        <a class="list-group-item list-group-item-action"><strong>Адрес доставки:</strong> {{ order.delivery_address }} ₽</a>
+                    {% else %}
+                        <a class="list-group-item list-group-item-action">Самовывоз из шоу-рума: 0 ₽</a>
+                    {% endif %}
                 </div>
                 <a href="{% url 'order_history' %}" class="btn bg-danger bg-opacity-50">Назад</a>
             </div>

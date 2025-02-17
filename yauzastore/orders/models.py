@@ -116,6 +116,7 @@ class Order(models.Model):
         ('shipped', 'Отправлено'),
         ('delivered', 'Доставлено в пункт выдачи'),
         ('canceled', 'Отменено'),
+        ('done', 'Готов')
     ]
 
     delivery_method = models.CharField(
@@ -192,10 +193,17 @@ class Order(models.Model):
         verbose_name="Адрес доставки"
     )
 
+    delivery_cost = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
     payment_status = models.CharField(
         max_length=20,
         null=True,
         blank=True,
+        default='pending',
         verbose_name="Статус оплаты"
     )
 
