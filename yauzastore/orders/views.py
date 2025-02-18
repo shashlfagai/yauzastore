@@ -500,8 +500,6 @@ def yookassa_webhook(request):
         # Проверяем, что пришло уведомление о платеже
         if 'object' in data and data['object']['status']:
             payment_status = data['object']['status']
-            payment_id = data['object']['id']
-
             # Ищем заказ по payment_id
             try:
                 order_id = data['object']['metadata']['order_id']
