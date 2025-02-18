@@ -422,6 +422,9 @@ def submit_order(request):
                         "email": str(order.user.email)
                     },
                     "items": []
+                },
+                "metadata": {
+                    "order_id": order.id
                 }
             }
             # Для каждого товара в заказе вычисляем стоимость с учетом скидок
@@ -501,9 +504,10 @@ def yookassa_webhook(request):
 
             # Ищем заказ по payment_id
             try:
-                order = Order.objects.get(payment_id=payment_id)
-            except Order.DoesNotExist:
-                return JsonResponse({"error": "Order not found"}, status=404)
+                order_id = data['object']['metadata']['order_id']
+                order = Order.objects.get(id=order_id)
+            except (Order.DoesNotExist, KeyError):
+                return JsonResponse({"error": "Order not found or metadata missing"}, status=404)
 
             # Обновляем статус заказа в зависимости от ответа ЮКассы
             if payment_status == "succeeded":
