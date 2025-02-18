@@ -222,7 +222,7 @@ def order_view(request):
                 'size': size.size,
                 'size_id': value['size_id'],
                 'quantity': value['quantity'],
-                'price': value['price'],
+                'price': float(value['price']),
                 'product_id': value['product_id'],
                 'image': value['image'],
                 'promotions': promotions,

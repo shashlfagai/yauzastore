@@ -9,12 +9,24 @@
         let deliveryRadio = document.getElementById("standard");
         let deliveryInfo = document.getElementById("delivery-info");
 
+        let cashPayment = document.getElementById("cash");
+        let onlinePayment = document.getElementById("online");
+
         function toggleDeliveryFields() {
+            let isDelivery = deliveryRadio.checked;
             deliveryInfo.style.display = deliveryRadio.checked ? "block" : "none";
+            // Если выбрана доставка, отключаем "Оплату наличными"
+            cashPayment.disabled = isDelivery;
+        
+            // Если текущий метод оплаты - наличные и выбрана доставка, переключаем на онлайн
+            if (isDelivery && cashPayment.checked) {
+                onlinePayment.checked = true;
+            }
         }
 
         pickupRadio.addEventListener("change", toggleDeliveryFields);
         deliveryRadio.addEventListener("change", toggleDeliveryFields);
+        toggleDeliveryFields();
     });
 </script>
 
@@ -86,7 +98,11 @@
             <!-- Блок с формой адреса (скрыт по умолчанию) -->
             <div id="delivery-info" class="card mx-5 p-3 p-sm-4" style="background-color: #ebebeb; display: none;">
                 <h5>Информация о доставке</h5>
-                <p>Доставка осуществляется курьерской службой. Стоимость доставки — 300₽.</p>
+                <p>
+                    <strong>Стоимость доставки — 300₽.</strong><br>
+                    Доставка осуществляется до ПВЗ СДЕК, ближайший к вашему адресу.
+                    После оформления, с вами свяжется наш сатрудник и предоставит информацию о заказе.
+                </p>
                 
                 <div class="mb-3">
                     <label for="city" class="form-label">Город</label>
@@ -114,14 +130,14 @@
             <div class="card mx-5 mb-3 p-3 p-sm-4" style="background-color: #ebebeb;">
                 <div class="row">
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="payment_method" value="cash" id="cash" checked>
+                        <input class="form-check-input" type="radio" name="payment_method" value="cash" id="cash">
                         <label class="form-check-label" for="cash">
                             Оплата наличными или переводом при получении.
                         </label>
                     </div>
                     <hr class="my-4">
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="payment_method" value="online" id="online" {% if order.payment_method == 'online' %} checked {% endif %}>
+                        <input class="form-check-input" type="radio" name="payment_method" value="online" id="online" checked>
                         <label class="form-check-label" for="online">
                             Оплата онлайн
                         </label>
