@@ -441,16 +441,16 @@ def submit_order(request):
                     discount_price = item.product.get_discounted_price()
                 else:
                     discount_price = item.product.price
-                    payment_data["receipt"]["items"].append({
-                    "description": item.product.name,
-                    'amount': {
-                        'value': str(round(discount_price.amount, 2)),
-                        'currency': "RUB"
-                    },
-                    "quantity": str(item.quantity),
-                    "vat_code": 1,
-                    "payment_mode": "full_payment",
-                    "payment_subject": "commodity"
+                payment_data["receipt"]["items"].append({
+                "description": item.product.name,
+                'amount': {
+                    'value': str(round(discount_price.amount, 2)),
+                    'currency': "RUB"
+                },
+                "quantity": str(item.quantity),
+                "vat_code": 1,
+                "payment_mode": "full_payment",
+                "payment_subject": "commodity"
                 })
             if shipping_method == 'standard':  # Если выбрана доставка
                 payment_data["receipt"]["items"].append({
