@@ -537,7 +537,12 @@ def get_order_status(request, order_id):
 
 @login_required
 def order_history(request):
-    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    orders = Order.objects.filter(
+        user=request.user
+    ).exclude(
+        status__in=['pending', 'canceled']
+    ).order_by('-created_at')
+
     return render(request, 'orders/order_history.html', {'orders': orders})
 
 

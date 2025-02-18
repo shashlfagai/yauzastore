@@ -39,6 +39,11 @@ class OrderAdmin(admin.ModelAdmin):
     )
 
     inlines = [OrderItemInline]
+    
+    def get_queryset(self, request):
+        """Фильтруем заказы в админке, исключая pending."""
+        qs = super().get_queryset(request)
+        return qs.exclude(status='pending')
 
     def display_order_items(self, obj):
         order_items = obj.items.all()
