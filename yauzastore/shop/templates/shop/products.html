@@ -19,21 +19,21 @@
 <div class="container-fluid">
     <div class="row g-2 p-5">
         {% for product in products %}
-                <a href="{% url 'item-page' product.id %}" class="col-12 col-sm-12 col-md-3 product-item">
-                    <div class="item-image">
-                        {% if product.images.first %}
-                            <img src="{{ product.images.first.image.url }}" alt="item" class="img-fluid">
-                        {% endif %}
-                    </div>
-                    <div class="price ">
-                        {% if product.has_discount %}
-                            <p><span style="text-decoration: line-through;">{{ product.price }}</span></p>
-                            <p>{{ product.get_discounted_price }}</p>
-                        {% else %}
-                            <p>{{ product.price }}</p>
-                        {% endif %}
-                    </div>
-                </a>
+        <a href="{% url 'item-page' product.id %}" class="col-12 col-sm-12 col-md-3 product-item">
+            <div class="item-image">
+                {% if product.images.first %}
+                    <img src="{{ product.images.first.image.url }}" alt="item" class="img-fluid">
+                {% endif %}
+            </div>
+            <div class="price ">
+                {% if product.has_discount %}
+                    <p><span style="text-decoration: line-through;">{{ product.price }}</span></p>
+                    <p>{{ product.get_discounted_price }}</p>
+                {% else %}
+                    <p>{{ product.price }}</p>
+                {% endif %}
+            </div>
+        </a>
         {% endfor %}
     </div>
     <div class="pagination justify-content-center">
@@ -41,7 +41,7 @@
             <ul class="pagination">
                 {% if products.has_previous %}
                     <li class="page-item">
-                        <a class="page-link text-black bg-white border-white" href="?page={{ products.previous_page_number }}" aria-label="Previous">
+                        <a class="page-link text-black bg-white border-white" href="?page={{ products.previous_page_number }}{% if request.GET.subcategory_id %}&subcategory_id={{ request.GET.subcategory_id }}{% endif %}" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                             <span class="visually-hidden">Previous</span>
                         </a>
@@ -63,14 +63,14 @@
                         </li>
                     {% elif num > products.number|add:-2 and num < products.number|add:2 %}
                         <li class="page-item">
-                            <a class="page-link text-black bg-white border-white" href="?page={{ num }}">{{ num }}</a>
+                            <a class="page-link text-black bg-white border-white" href="?page={{ num }}{% if request.GET.subcategory_id %}&subcategory_id={{ request.GET.subcategory_id }}{% endif %}">{{ num }}</a>
                         </li>
                     {% endif %}
                 {% endfor %}
                 
                 {% if products.has_next %}
                     <li class="page-item">
-                        <a class="page-link text-black bg-white border-white" href="?page={{ products.next_page_number }}" aria-label="Next">
+                        <a class="page-link text-black bg-white border-white" href="?page={{ products.next_page_number }}{% if request.GET.subcategory_id %}&subcategory_id={{ request.GET.subcategory_id }}{% endif %}" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                             <span class="visually-hidden">Next</span>
                         </a>

@@ -125,7 +125,7 @@ def accessories(request):
     products = products.annotate(
         total_quantity=Subquery(product_sizes, output_field=IntegerField())
     ).filter(total_quantity__gt=0)
-    paginator = Paginator(products, 8)  # 10 товаров на странице
+    paginator = Paginator(products, 8)
     page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
     return render(
@@ -226,7 +226,7 @@ def save_session_order(request, cart):
 def promo(request):
     subcategories = []
     discounted_products = [
-        product for product in Product.objects.all() if product.has_discount()
+        product for product in Product.objects.all() if product.has_discount() and product.sizes.aggregate(total_quantity=Sum('quantity'))['total_quantity'] != 0
     ]
     for product in discounted_products:
         product_subcategories = product.subcategories.all()
@@ -238,14 +238,15 @@ def promo(request):
     if selected_subcategory_id:
         discounted_products = Product.objects.filter(
             id__in=[product.id for product in discounted_products],
-            subcategories__id=selected_subcategory_id
+            subcategories__id=selected_subcategory_id,
+            sizes__quantity__gt=0
         ).distinct()
     paginator = Paginator(discounted_products, 8)
     page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
     context = {
         'products': page_obj,
-        'subcategories': subcategories,
+        'subcategories': list(set(subcategories)),
         'current_view': 'promo'
     }
     return render(request, 'shop/promo.html', context)

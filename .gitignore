@@ -169,5 +169,7 @@ logs/
 yauzastore/media
 yauzastore/staticfiles
 yauzastore/yauzastore/settings
+yauzastore/.DS_Store
+yauzastore/shop/static/shop/.DS_Store
 
 backup.sql
