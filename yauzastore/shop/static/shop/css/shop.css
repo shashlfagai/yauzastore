@@ -117,6 +117,7 @@ header {
     justify-content: center;
     overflow: hidden;
     position: relative;
+    padding-top: 100%;
 }
 
 .item-image img {

@@ -19,7 +19,7 @@
 <div class="container-fluid">
     <div class="row g-2 p-5">
         {% for product in products %}
-                <a href="{% url 'item-page' product.id %}" class="col-12 col-sm-12 col-md-3 product-item">
+                <a href="{% url 'item-page' product.id %}" class="col-12 col-sm-12 col-md-4 col-xl-3 product-item">
                     <div class="item-image">
                         {% if product.images.first %}
                             <img src="{{ product.images.first.image.url }}" alt="item" class="img-fluid">
