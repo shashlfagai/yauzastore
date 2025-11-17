@@ -48,6 +48,11 @@ urlpatterns = [
         name='refund_and_exchange_policy'
     ),
     path(
+        'public_offer/',
+        views.public_offer,
+        name='public_offer'
+    ),
+    path(
         'realization/',
         views.realization_request,
         name='realization_request'

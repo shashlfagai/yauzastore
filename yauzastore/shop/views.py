@@ -260,6 +260,10 @@ def refund_and_exchange_policy(request):
     return render(request, 'shop/refund_and_exchange_policy.html')
 
 
+def public_offer(request):
+    return render(request, 'shop/public_offer.html')
+
+
 def realization_request(request):
     if request.method == 'POST':
         form = RealizationForm(request.POST)
