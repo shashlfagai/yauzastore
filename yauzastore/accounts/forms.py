@@ -40,6 +40,10 @@ class UserRegisterForm(UserCreationForm):
         required=True,
         label="Я согласен на обработку персональных данных"
         )
+    agree_to_offer = forms.BooleanField(
+        required=True,
+        label="Ознакомление с публичной офертой"
+    )
 
     class Meta:
         model = User
@@ -52,7 +56,8 @@ class UserRegisterForm(UserCreationForm):
             'password2',
             'phone_number',
             'social_link',
-            'agree_to_privacy_policy'
+            'agree_to_privacy_policy',
+            'agree_to_offer'
             ]
 
     def __init__(self, *args, **kwargs):
@@ -127,7 +132,10 @@ class UserRegisterForm(UserCreationForm):
                 social_link=self.cleaned_data['social_link'],
                 agree_to_privacy_policy=self.cleaned_data[
                     'agree_to_privacy_policy'
-                    ]
+                    ],
+                agree_to_offer=self.cleaned_data[
+                    'agree_to_offer'
+                    ] 
             )
         return user
 

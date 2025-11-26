@@ -8,7 +8,7 @@ from .forms import (
     CustomAuthenticationForm
     )
 from django.contrib.auth.decorators import login_required
-from .models import UserProfile
+from .models import UserProfile, UserAgreement
 from django.contrib.auth import (
     update_session_auth_hash,
     logout,
@@ -26,6 +26,8 @@ def register(request):
         form = UserRegisterForm(request.POST, request=request)
         if form.is_valid():
             user = form.save()
+            if form.cleaned_data.get('agree_to_offer'):
+                UserAgreement.objects.create(user=user)
             form.cleaned_data.get('username')
             login(request, user)
             if cart:
